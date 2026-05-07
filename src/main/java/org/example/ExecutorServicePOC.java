@@ -14,5 +14,18 @@ public class ExecutorServicePOC {
         System.out.println("Starting...");
 
         List<Future<String>> futures = new ArrayList<>();
+
+        for (int i = 1; i <= 10; i++) {
+            final int taskId = i;
+            executor.submit(() -> {
+                System.out.println("Tarefa " + taskId + " executada por: " +
+                        Thread.currentThread().getName());
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            });
+        }
     }
 }
