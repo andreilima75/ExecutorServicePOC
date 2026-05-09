@@ -2,10 +2,7 @@ package org.example;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 public class ExecutorServicePOC {
 
@@ -37,6 +34,16 @@ public class ExecutorServicePOC {
             });
             futures.add(future);
         }
+
+        for (Future<String> future : futures) {
+            try {
+                String resultado = future.get(); // bloqueia até o resultado ficar pronto
+                System.out.println(resultado);
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
+
         shutdownAndAwaitTermination(executor);
     }
 
