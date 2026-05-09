@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 public class ExecutorServicePOC {
 
@@ -27,5 +28,30 @@ public class ExecutorServicePOC {
                 }
             });
         }
+
+        for (int i = 1; i <= 5; i++) {
+            final int taskId = i;
+            Future<String> future = executor.submit(() -> {
+                Thread.sleep(1500);
+                return "Resultado da tarefa Callable " + taskId;
+            });
+            futures.add(future);
+        }
+        shutdownAndAwaitTermination(executor);
+    }
+
+    private static void shutdownAndAwaitTermination(ExecutorService executor) {
+        executor.shutdown();
+        try {
+            if (!executor.awaitTermination(60, TimeUnit.SECONDS)) {
+                executor.shutdownNow();
+                if (!executor.awaitTermination(60, TimeUnit.SECONDS))
+                    System.err.println("Pool não terminou corretamente");
+            }
+        } catch (InterruptedException e) {
+            executor.shutdownNow();
+            Thread.currentThread().interrupt();
+        }
+        System.out.println("ExecutorService encerrado.");
     }
 }
