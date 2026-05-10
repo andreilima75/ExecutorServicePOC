@@ -19,7 +19,7 @@ public class ExecutorServicePOC {
                 System.out.println("Tarefa " + taskId + " executada por: " +
                         Thread.currentThread().getName());
                 try {
-                    Thread.sleep(1000);
+                    doWork();
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
@@ -37,7 +37,7 @@ public class ExecutorServicePOC {
 
         for (Future<String> future : futures) {
             try {
-                String resultado = future.get(); // bloqueia até o resultado ficar pronto
+                String resultado = future.get();
                 System.out.println(resultado);
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
@@ -45,6 +45,10 @@ public class ExecutorServicePOC {
         }
 
         shutdownAndAwaitTermination(executor);
+    }
+
+    private static void doWork() throws InterruptedException {
+        Thread.sleep(1000);
     }
 
     private static void shutdownAndAwaitTermination(ExecutorService executor) {
